@@ -136,14 +136,15 @@ def main():
     ufo_df = ufo_counts(ufo_df, False)
     ufo_df = shape_counts(ufo_df)
     #builds plots
+    plt_1 = plt.figure(1)
     cluster_plt = shape_plot(ufo_df,False)
     plt.title("3 Cluster Plot For K-Values of UFO Type and UFOs per State")
-    plt.show(cluster_plt)
+    plt_2 = plt.figure(2)
     plt.figure(figsize=(12, 4))
     bar_plt = state_plot(ufo_df)
     plt.xticks(rotation=90)
     plt.title("UFO Sightings Per State")
-    plt.show(bar_plt)
+    plt.show()
 
 if __name__ == '__main__':
     main()
