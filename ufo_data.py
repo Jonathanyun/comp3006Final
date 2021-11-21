@@ -56,7 +56,7 @@ def ufo_type(df,shape = "all"):
     '''
     #filters dataframe when specific UFO shape is requested
     if shape != "all":
-        df[df["UFO_shape"].str.lower() == shape.lower()].reset_index()
+        df = df[df["UFO_shape"].str.lower() == shape.lower()].reset_index()
     return df
 
 def ufo_counts(df,by_city = False):
@@ -139,6 +139,7 @@ def main():
     plt_1 = plt.figure(1)
     cluster_plt = shape_plot(ufo_df,False)
     plt.title("3 Cluster Plot For K-Values of UFO Type and UFOs per State")
+
     plt_2 = plt.figure(2)
     plt.figure(figsize=(12, 4))
     bar_plt = state_plot(ufo_df)
