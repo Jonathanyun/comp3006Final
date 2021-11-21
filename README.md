@@ -41,7 +41,7 @@ package dependencies listed in requirements.txt
   'changing', 'egg', 'diamond', 'flash', 'teardrop', 'cone', 'cross', 'pyramid',
   'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed','all']
  -**v**:
- -**t**:
+ -**st**:
  -**p**: changes colors schemes of cholopleth plots, requires two arguments from the following list. No inputs will cause plot to use automatic colors
   'BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'
  -**l**: changes the starting point on the map generated based off state, full name or abbreviation, given. No state given implies starting at the latitude and longitude in the    middle of the US.
