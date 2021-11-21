@@ -7,18 +7,49 @@ from folium import plugins
 from folium.plugins import HeatMap
 #Python Modules
 import ufo_data as ufo
-import covid_vaccinations as covid
 import lat_lon as ll
 
+#Creates parser for command line arguements
+parser = argparse.ArgumentParser(description="Parse arguements to filter and combine both data sets")
+parser.add_argument('-c', '--city', action='store_true', dest = "ufo_state", help="Flags if UFO data is mapped by city or by state")
+parser.add_argument('-s', '--shape', choices=['cylinder', 'light', 'circle', 'sphere', 'disk', 'fireball',
+                                              'unknown', 'oval', 'other', 'cigar', 'rectangle', 'chevron',
+                                              'triangle', 'formation', 'N/A', 'delta', 'changing', 'egg',
+                                              'diamond', 'flash', 'teardrop', 'cone', 'cross', 'pyramid',
+                                              'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed',
+                                              'all'], dest='ufo_shape', type=str, help="Filters UFO type")
+#parser.add_argument('-v','--vaccine',)
+#parser.add_argument('-t','--time',)
+parser.add_argument('-p','--palette', choices=['BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 
+                                               'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'],
+                    nargs=2, default=['PuRd','BuGn'], dest="colors", help="Picks the Color palette for the map")
+parser.add_argument('-l','--location',type=str,dest = "state")
+args = parser.parse_args()
+
+## Insert & Clean UFO Data
+#Filtering UFO data based off command line arguements and ufo_data module functions
+if args.ufo_state == True:
+    ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", False)
+    ufo_df = ufo.ufo_counts(ufo_df,True)
+else:
+    ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", True)
+    ufo_df = ufo.ufo_counts(ufo_df,False)
+
+if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
+    ufo_df = ufo.ufo_type(ufo_df,args.ufo_shape.lower())
+#Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
+ufo_df = ufo.shape_counts(ufo_df)   
+
 class map_maker:
-    def __init__(self):
+    def __init__(self, ufo_data):
         ''' Module initializes class
         '''
+        self.ufo_data = ufo_data
         #Creates Map and adds data to it
-        get_lat_lon()
-        build_basemap()
-        add_ufo_data()
-        add_vaccine_data()
+        self.get_lat_lon()
+        self.build_basemap()
+        self.add_ufo_data()
+        self.add_vaccine_data()
     
     def get_lat_lon(self,state_input = str(args.state), state_filename = "state_lat_long.csv"):
         ''' Method gets the latitude and longitude for the lat and lon variables from command line input
@@ -88,40 +119,11 @@ class map_maker:
             ).add_to(self.usa_map)
         return self.usa_map
     
-    def add_vaccine_data(self,):
-        return
+    #def add_vaccine_data(self,):
+        #return
     
 def main():
-    #Creates parser for command line arguements
-    parser = argparse.ArgumentParser(description="Parse arguements to filter and combine both data sets")
-    parser.add_argument('-c', '--city', action='store_true', dest = "ufo_state", help="Flags if UFO data is mapped by city or by state")
-    parser.add_argument('-s', '--shape', choices=['cylinder', 'light', 'circle', 'sphere', 'disk', 'fireball',
-                                                  'unknown', 'oval', 'other', 'cigar', 'rectangle', 'chevron',
-                                                  'triangle', 'formation', 'N/A', 'delta', 'changing', 'egg',
-                                                  'diamond', 'flash', 'teardrop', 'cone', 'cross', 'pyramid',
-                                                  'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed',
-                                                  'all'], dest='ufo_shape', type=str, help="Filters UFO type")
-    parser.add_argument('-v','--vaccine',)
-    parser.add_argument('-t','--time',)
-    parser.add_argument('-p','--palette', choices=['BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 
-                                                   'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'],
-                        nargs=2, default=['PuRd','BuGn'], dest="colors", help="Picks the Color palette for the map")
-    parser.add_argument('-l','--location',type=str,dest = "state")
-    args = parser.parse_args()
-    
-    ## Insert & Clean UFO Data
-    #Filtering UFO data based off command line arguements and ufo_data module functions
-    if args.ufo_state == True:
-        ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", False)
-        ufo_df = ufo.ufo_counts(ufo_df,True)
-    else:
-        ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", True)
-        ufo_df = ufo.ufo_counts(ufo_df,False)
 
-    if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
-        ufo_df = ufo.ufo_type(ufo_df,args.ufo_shape.lower())
-    #Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
-    ufo_df = ufo.shape_counts(ufo_df)
     
     ## UFO Plots
     #K-Value 3 Cluster Plot for UFO data, ignores shape input to see relationship between UFO Shape Sightings
@@ -139,12 +141,9 @@ def main():
     
     ## Vaccine Stuff -
     
-    #one more plot per rubric?
     #Show combined map
     Map_made = map_maker()
-    Map_made.usa_map
-    
-    #Create & Export Combined .csv file
+    Map_made.usa_map.save(outfile= "test.html")
     
 if __name__ == '__main__':
     main()
