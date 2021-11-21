@@ -139,9 +139,12 @@ def main():
     
     ## Vaccine Stuff -
     
+    #one more plot per rubric?
     #Show combined map
     Map_made = map_maker()
     Map_made.usa_map
+    
+    #Create & Export Combined .csv file
     
 if __name__ == '__main__':
     main()
