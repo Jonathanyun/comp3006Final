@@ -6,11 +6,8 @@ import geopandas as gpd
 from folium import plugins
 from folium.plugins import HeatMap
 import webbrowser
-import datetime
-import bar_chart_race as bcr
-from IPython.display import HTML
-
-
+import matplotlib.pyplot as plt
+import matplotlib.dates
 
 
 def total_vaccinations(state, data, map):
@@ -259,109 +256,28 @@ def create_new_data():
     new_data = merge_data(file_one, vacc_data, state_data, fields)
     clean_data(file_two, new_data, state_names, fields)
 
-def time_barplot(state, variable, option):
+
+def time_plot(state, variable):
     df = pd.read_csv('updated_us_state_vacc.csv')
-    highest_pop = ['California', 'Texas', 'Florida', 'New York', 'Pennsylvania']
-    lowest_pop = ['Wyoming', 'Vermont', 'Alaska', 'North Dakota', 'South Dakota']
-    state_check = False
+    dates = df.loc[df['location'] == state]['date'].reset_index(drop = True)
+    variable_data = df.loc[df['location'] == state][variable].reset_index(drop = True)
 
-    if option == 'high':
-        for i in highest_pop:
-            if state == i:
-                state_check = True
+    ylabel = f"{variable}"
+    ylabel = ylabel.replace('_', ' ')
+    ylabel = ylabel.title()
     
-        if state_check == True:
-            california = df.loc[df['location'] == 'California'][variable].reset_index(drop = True)
-            texas = df.loc[df['location'] == 'Texas'][variable].reset_index(drop = True)
-            florida = df.loc[df['location'] == 'Florida'][variable].reset_index(drop = True)
-            new_york = df.loc[df['location'] == 'New York State'][variable].reset_index(drop = True)
-            penn = df.loc[df['location'] == 'Pennsylvania'][variable].reset_index(drop = True)
-            
-            CALI, TEX, FLO, NEW, PENN = [], [], [], [], []
-            
-            for i in range (0, 100):
-                CALI.append(california[i])
-                TEX.append(texas[i])
-                FLO.append(florida[i])
-                NEW.append(new_york[i])
-                PENN.append(penn[i])
-            
-            cali = pd.Series(CALI)
-            tex = pd.Series(TEX)
-            flo = pd.Series(FLO)
-            new = pd.Series(NEW)
-            penn = pd.Series(PENN)
-
-            date = []
-            for i in range(0, 100):
-                date.append(df.date[i])
-
-            DATE = pd.Series(date)
-
-            data = {"California": cali,
-                    "Texas": tex,
-                    "Florida": flo, 
-                    "New York": new,
-                    "Pennsylvania": penn,
-                    "Date": DATE
-                    }
-            
-            corona = pd.concat(data, axis = 1)
-            corona.set_index("Date", inplace = True)
-            corona = corona.dropna()
-
-            bcr_html = bcr.bar_chart_race(df = corona, filename = "barchart.html", orientation = 'h', title = f"{variable} Test", figsize = (12,4))
-            HTML(bcr_html)
-
-        # else:
-        #     california = df.loc[df['location'] == 'California'][variable].reset_index(drop = True)
-        #     texas = df.loc[df['location'] == 'Texas'][variable].reset_index(drop = True)
-        #     florida = df.loc[df['location'] == 'Florida'][variable].reset_index(drop = True)
-        #     new_york = df.loc[df['location'] == 'New York State'][variable].reset_index(drop = True)
-        #     penn = df.loc[df['location'] == 'Pennsylvania'][variable].reset_index(drop = True)
-            
-        #     CALI, TEX, FLO, NEW, PENN = [], [], [], [], []
-            
-        #     for i in range (0, 100):
-        #         CALI.append(california[i])
-        #         TEX.append(texas[i])
-        #         FLO.append(florida[i])
-        #         NEW.append(new_york[i])
-        #         PENN.append(penn[i])
-            
-        #     cali = pd.Series(CALI)
-        #     tex = pd.Series(TEX)
-        #     flo = pd.Series(FLO)
-        #     new = pd.Series(NEW)
-        #     penn = pd.Series(PENN)
-
-        #     date = []
-        #     for i in range(0, 100):
-        #         date.append(df.date[i])
-
-        #     DATE = pd.Series(date)
-
-        #     data = {"California": cali,
-        #             "Texas": tex,
-        #             "Florida": flo, 
-        #             "New York": new,
-        #             "Pennsylvania": penn,
-        #             "Date": DATE
-        #             }
-
-        #     corona = pd.concat(data, axis = 1)
-        #     corona.set_index("Date", inplace = True)
-
-        #     bcr_html = bcr.bar_chart_race(df = corona, filename = None, orientation = 'h', title = f"{variable} Test", figsize = (12,4))
-        #     HTML(bcr_html) 
-            
-
-
+    fig = plt.plot_date(x = dates, y = variable_data)
+    plt.title(f"{state} {ylabel}")
+    plt.xlabel('Dates from 1.12.21 to 10.28.21')
+    plt.ylabel(ylabel)
+    plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False)
+    plt.xticks([])
+    plt.show() 
+    print(fig)
 
 
 def main():
-    time_barplot('Texas', 'total_vaccinations', 'high')
-    
+    time_plot('Alabama', 'distributed_per_hundred')
     # create_new_data()
 
     
