@@ -18,7 +18,7 @@ def total_vaccinations(state, data, map, color):
 		line_opacity = 0.2,
 		legend_name = 'Total Vaccinations'
 	).add_to(map)
-
+    
 def total_distributed(state, data, map, color):
 	fl.Choropleth(
 		geo_data = state,

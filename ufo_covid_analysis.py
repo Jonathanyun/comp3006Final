@@ -7,6 +7,7 @@ from folium import plugins
 from folium.plugins import HeatMap
 import pandas as pd
 #Python Moduleimport ufo_data as ufo
+import ufo_data as ufo
 import lat_lon as ll
 import covid_vaccinations as covid
 
@@ -23,12 +24,14 @@ parser.add_argument('-s', '--shape', choices=['cylinder', 'light', 'circle', 'sp
                                               'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed',
                                               'all'], dest='ufo_shape', type=str, help="Filters UFO type")
 parser.add_argument('-v','--vaccine', choices = fields, default = 'total_vaccinations', dest = 'covid_variable', type = str, help = 'COVID Vaccination choices' )
-parser.add_argument('-st','--state', choices = state_names, default = 'Alabama', dest = 'state', type = str, help = 'Choose a US State' )
+parser.add_argument('-st','--state', choices = state_names, default = 'Alabama', dest = 'state_name', type = str, help = 'Choose a US State' )
 parser.add_argument('-p','--palette', choices=['BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 
                                                'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'],
                     nargs=2, default=['PuRd','BuGn'], dest="colors", help="Picks the Color palette for the map")
 parser.add_argument('-l','--location',type=str,dest = "state")
-args = parser.parse_args()
+#args = parser.parse_args()
+args = parser.parse_args(['--city', '--shape', 'all', '--palette','BuGn', 'BuPu','--location','TX', '--vaccine','total_vaccinations', '--state', 'California'])
+
 
 ## Insert & Clean UFO Data
 #Filtering UFO data based off command line arguements and ufo_data module functions
@@ -46,6 +49,7 @@ ufo_df = ufo.shape_counts(ufo_df)
 
 ## Covid Data
 covid_df = pd.read_csv(covid.create_new_data())
+covid_df = covid_df.dropna()
 
 
 class map_maker:
@@ -126,8 +130,33 @@ class map_maker:
             ).add_to(self.usa_map)
         return self.usa_map
     
-    def add_vaccine_data(self,):
-        return
+    def add_vaccine_data(self, state_arg = args.state_name, variable_arg = args.covid_variable):
+        if (variable_arg == 'total_vaccinations'):
+            covid.total_vaccinations(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'people_vaccinated'):
+            covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'people_fully_vaccinated'):
+            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+                
+        return self.usa_map
     
 def main():
 
@@ -147,10 +176,8 @@ def main():
     plt.show()
     
     ## Vaccine Stuff -
-    covid.time_plot(args.state, args.covid_variable)
-    for i in fields:
-        if i == args.covid_variable:
-            func = args.covidvarib
+    covid.time_plot(args.state_name, args.covid_variable)
+
     
     #Show combined map
     Map_made = map_maker()
