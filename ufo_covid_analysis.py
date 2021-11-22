@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 import folium as fl
 from folium import plugins
 from folium.plugins import HeatMap
+import pandas as pd
 #Python Modules
 import ufo_data as ufo
 import lat_lon as ll
+import covid_vaccinations as covid
 
 #Creates parser for command line arguements
 parser = argparse.ArgumentParser(description="Parse arguements to filter and combine both data sets")
@@ -39,6 +41,8 @@ if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
     ufo_df = ufo.ufo_type(ufo_df,args.ufo_shape.lower())
 #Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
 ufo_df = ufo.shape_counts(ufo_df)   
+
+covid_df = pd.read_csv(covid.create_new_data())
 
 class map_maker:
     def __init__(self, ufo_data):

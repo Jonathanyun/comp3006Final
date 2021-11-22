@@ -255,6 +255,7 @@ def create_new_data():
     
     new_data = merge_data(file_one, vacc_data, state_data, fields)
     clean_data(file_two, new_data, state_names, fields)
+    return file_two
 
 
 def time_plot(state, variable):
