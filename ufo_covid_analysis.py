@@ -127,8 +127,8 @@ class map_maker:
             ).add_to(self.usa_map)
         return self.usa_map
     
-    #def add_vaccine_data(self,):
-        #return
+    def add_vaccine_data(self,):
+        return
     
 def main():
 
@@ -149,6 +149,9 @@ def main():
     
     ## Vaccine Stuff -
     covid.time_plot(args.state, args.covid_variable)
+    for i in fields:
+        if i == args.covid_variable:
+            func = args.covidvarib
     
     #Show combined map
     Map_made = map_maker()
