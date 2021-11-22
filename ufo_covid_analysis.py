@@ -53,19 +53,16 @@ covid_df = covid_df.dropna()
 
 
 class map_maker:
-    def __init__(self, second = False):
+    def __init__(self, map_type = args.covid_variable[0]):
         ''' Module initializes class
         '''
+        self.map_type = map_type
         #Creates Map and adds data to it
         self.get_lat_lon()
         self.build_basemap()
         self.add_vaccine_data()
         self.add_ufo_data()
         
-        if second == True:
-            self.build_basemap()
-            self.add_vaccine_data(variable_arg = args.covid_variable[1])
-            self.add_ufo_data()
     
     
     def get_lat_lon(self,state_input = str(args.state), state_filename = "state_lat_long.csv"):
@@ -137,30 +134,34 @@ class map_maker:
             ).add_to(self.usa_map)
         return self.usa_map
     
-    def add_vaccine_data(self, state_arg = args.state_name, variable_arg = args.covid_variable[0], color_arg = args.colors[1]):
-        if (variable_arg == 'total_vaccinations'):
+    def add_vaccine_data(self, state_arg = args.state_name, color_arg = args.colors[1]):
+        if (self.map_type == 'total_vaccinations'):
             covid.total_vaccinations(self.state_geo, covid_df, self.usa_map, color_arg)
+<<<<<<< HEAD
         elif(variable_arg == 'total_distributed'):
             covid.total_distributed(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_vaccinated'):
+=======
+        elif(self.map_type == 'people_vaccinated'):
+>>>>>>> 349340eb60c8b7fa9c4ae96fb03b46187cb4c4ae
             covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'people_fully_vaccinated'):
+        elif(self.map_type == 'people_fully_vaccinated'):
             covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'total_vaccinations_per_hundred'):
+        elif(self.map_type == 'total_vaccinations_per_hundred'):
             covid.total_vaccinations_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'people_fully_vaccinated'):
+        elif(self.map_type == 'people_fully_vaccinated'):
             covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'people_vaccinated_per_hundred'):
+        elif(self.map_type == 'people_vaccinated_per_hundred'):
             covid.people_vaccinated_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'distributed_per_hundred'):
+        elif(self.map_type == 'distributed_per_hundred'):
             covid.distributed_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'daily_vaccinations_raw'):
+        elif(self.map_type == 'daily_vaccinations_raw'):
             covid.daily_vaccinations_raw(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'daily_vaccinations'):
+        elif(self.map_type == 'daily_vaccinations'):
             covid.daily_vaccinations(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'daily_vaccinations_per_million'):
+        elif(self.map_type == 'daily_vaccinations_per_million'):
             covid.daily_vaccinations_per_million(self.state_geo, covid_df, self.usa_map, color_arg)
-        elif(variable_arg == 'share_doses_used'):
+        elif(self.map_type == 'share_doses_used'):
             covid.share_doses_used(self.state_geo, covid_df, self.usa_map, color_arg)
                 
         return self.usa_map
@@ -188,9 +189,9 @@ def main():
 
     
     #Show combined map
-    Map_made = map_maker()
+    Map_made = map_maker(args.covid_variable[0])
     Map_made.usa_map.save(outfile= "first_map.html")
-    Second_map_made = map_maker(second = True)
+    Second_map_made = map_maker(args.covid_variable[1])
     Second_map_made.usa_map.save(outfile = "second_map.html")
     
 if __name__ == '__main__':
