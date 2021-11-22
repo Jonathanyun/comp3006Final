@@ -45,10 +45,9 @@ ufo_df = ufo.shape_counts(ufo_df)
 covid_df = pd.read_csv(covid.create_new_data())
 
 class map_maker:
-    def __init__(self, ufo_data):
+    def __init__(self):
         ''' Module initializes class
         '''
-        self.ufo_data = ufo_data
         #Creates Map and adds data to it
         self.get_lat_lon()
         self.build_basemap()
