@@ -11,6 +11,9 @@ import ufo_data as ufo
 import lat_lon as ll
 import covid_vaccinations as covid
 
+fields = ['total_vaccinations', 'total_distributed', 'people_vaccinated', 'people_fully_vaccinated_per_hundred', 'total_vaccinations_per_hundred', 'people_fully_vaccinated', 'people_vaccinated_per_hundred', 'distributed_per_hundred', 'daily_vaccinations_raw', 'daily_vaccinations', 'daily_vaccinations_per_million', 'share_doses_used']
+state_names = ["Alaska", "Alabama", "Arkansas", "Arizona", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Iowa", "Idaho", "Illinois", "Indiana", "Kansas", "Kentucky", "Louisiana", "Massachusetts", "Maryland", "Maine", "Michigan", "Minnesota", "Missouri", "Mississippi", "Montana", "North Carolina", "North Dakota", "Nebraska", "New Hampshire", "New Jersey", "New Mexico", "Nevada", "New York State", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia", "Virgin Islands", "Vermont", "Washington", "Wisconsin", "West Virginia", "Wyoming"]
+    
 #Creates parser for command line arguements
 parser = argparse.ArgumentParser(description="Parse arguements to filter and combine both data sets")
 parser.add_argument('-c', '--city', action='store_true', dest = "ufo_state", help="Flags if UFO data is mapped by city or by state")
@@ -20,8 +23,8 @@ parser.add_argument('-s', '--shape', choices=['cylinder', 'light', 'circle', 'sp
                                               'diamond', 'flash', 'teardrop', 'cone', 'cross', 'pyramid',
                                               'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed',
                                               'all'], dest='ufo_shape', type=str, help="Filters UFO type")
-#parser.add_argument('-v','--vaccine',)
-#parser.add_argument('-t','--time',)
+parser.add_argument('-v','--vaccine', choices = fields, default = 'total_vaccinations', dest = 'covid_variable', type = str, help = 'COVID Vaccination choices' )
+parser.add_argument('-st','--state', choices = state_names, default = 'Alabama', dest = 'state', type = str, help = 'Choose a US State' )
 parser.add_argument('-p','--palette', choices=['BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 
                                                'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'],
                     nargs=2, default=['PuRd','BuGn'], dest="colors", help="Picks the Color palette for the map")
@@ -42,7 +45,9 @@ if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
 #Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
 ufo_df = ufo.shape_counts(ufo_df)   
 
+## Covid Data
 covid_df = pd.read_csv(covid.create_new_data())
+
 
 class map_maker:
     def __init__(self):
@@ -143,6 +148,7 @@ def main():
     plt.show()
     
     ## Vaccine Stuff -
+    covid.time_plot(args.state, args.covid_variable)
     
     #Show combined map
     Map_made = map_maker()
