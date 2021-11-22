@@ -5,10 +5,7 @@ import folium as fl
 import geopandas as gpd
 from folium import plugins
 from folium.plugins import HeatMap
-import webbrowser
 import matplotlib.pyplot as plt
-import matplotlib.dates
-
 
 def total_vaccinations(state, data, map, color):
 	fl.Choropleth(
