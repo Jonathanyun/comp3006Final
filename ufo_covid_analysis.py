@@ -137,24 +137,22 @@ class map_maker:
             covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
         elif(variable_arg == 'people_fully_vaccinated'):
             covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
-        elif(variable_arg == 'total_distributed'):
-            covid.total_distributed(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'total_vaccinations_per_hundred'):
+            covid.total_vaccinations_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'people_fully_vaccinated'):
+            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'people_vaccinated_per_hundred'):
+            covid.people_vaccinated_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'distributed_per_hundred'):
+            covid.distributed_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'daily_vaccinations_raw'):
+            covid.daily_vaccinations_raw(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'daily_vaccinations'):
+            covid.daily_vaccinations(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'daily_vaccinations_per_million'):
+            covid.daily_vaccinations_per_million(self.state_geo, covid_df, self.usa_map, args.color[1])
+        elif(variable_arg == 'share_doses_used'):
+            covid.share_doses_used(self.state_geo, covid_df, self.usa_map, args.color[1])
                 
         return self.usa_map
     
