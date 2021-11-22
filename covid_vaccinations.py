@@ -233,7 +233,7 @@ def time_plot(state, variable):
     plt.ylabel(ylabel)
     plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False)
     plt.xticks([])
-    plt.legend(variables)
+    plt.legend(variable)
     plt.show() 
     print(fig)
 
