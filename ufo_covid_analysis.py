@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import folium as fl
 from folium import plugins
 from folium.plugins import HeatMap
+import pandas as pd
 #Python Modules
 import ufo_data as ufo
 import lat_lon as ll
@@ -41,10 +42,9 @@ if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
 ufo_df = ufo.shape_counts(ufo_df)   
 
 class map_maker:
-    def __init__(self, ufo_data):
+    def __init__(self):
         ''' Module initializes class
         '''
-        self.ufo_data = ufo_data
         #Creates Map and adds data to it
         self.get_lat_lon()
         self.build_basemap()
