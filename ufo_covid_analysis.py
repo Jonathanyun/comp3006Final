@@ -6,8 +6,7 @@ import folium as fl
 from folium import plugins
 from folium.plugins import HeatMap
 import pandas as pd
-#Python Modules
-import ufo_data as ufo
+#Python Moduleimport ufo_data as ufo
 import lat_lon as ll
 import covid_vaccinations as covid
 

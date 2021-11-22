@@ -2,7 +2,6 @@ import csv
 import pandas as pd
 import numpy as np
 import folium as fl
-import geopandas as gpd
 from folium import plugins
 from folium.plugins import HeatMap
 import matplotlib.pyplot as plt
