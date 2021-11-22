@@ -236,24 +236,42 @@ def time_plot(state, variable):
     plt.show() 
     print(fig)
 
+def total_vaccinations_bar_plot():
+    df = pd.read_csv('clean_us_state_vacc.csv')
+    state_names = df['abbr']
+    total_vacc = df['total_vaccinations']
+
+    plt.bar(state_names, total_vacc)
+    plt.title("Total Vaccinations in the US by State")
+    plt.ylabel('Total Vaccinations')
+    plt.xlabel('State')
+    plt.xticks(fontsize = 5)
+    plt.figure(figsize = (12,4))
+    plt.show()
+
+    
+
+
+
 
 def main():
-    time_plot('Alabama', 'distributed_per_hundred')
-    create_new_data()
+    total_vaccinations_bar_plot()
+    # time_plot('Alabama', 'distributed_per_hundred')
+    # create_new_data()
 
     
-    orig_data = pd.read_csv('clean_us_state_vacc.csv')
-    clean_data = pd.DataFrame(orig_data)
+    # orig_data = pd.read_csv('clean_us_state_vacc.csv')
+    # clean_data = pd.DataFrame(orig_data)
     
-    lat = 37.0902
-    long = -95.7129
+    # lat = 37.0902
+    # long = -95.7129
     
-    total_map = fl.Map(location = [lat, long], zoom_start = 3)
-    url = ("https://raw.githubusercontent.com/python-visualization/folium/master/examples/data")
-    state_geo = f"{url}/us-states.json"
-    color = "YlGn"
+    # total_map = fl.Map(location = [lat, long], zoom_start = 3)
+    # url = ("https://raw.githubusercontent.com/python-visualization/folium/master/examples/data")
+    # state_geo = f"{url}/us-states.json"
+    # color = "YlGn"
 
-    share_doses_used(state_geo, clean_data, total_map, color)
+    # share_doses_used(state_geo, clean_data, total_map, color)
     
 
 if __name__ == "__main__":

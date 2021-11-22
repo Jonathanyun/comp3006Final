@@ -175,6 +175,7 @@ def main():
     
     ## Vaccine Stuff -
     covid.time_plot(args.state_name, args.covid_variable)
+    covid.total_vaccinations_bar_plot()
 
     
     #Show combined map
