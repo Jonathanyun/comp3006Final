@@ -233,6 +233,7 @@ def time_plot(state, variable):
     plt.ylabel(ylabel)
     plt.tick_params(axis = 'x', which = 'both', bottom = False, top = False)
     plt.xticks([])
+    plt.legend(variable)
     plt.show() 
     print(fig)
 
@@ -255,9 +256,9 @@ def total_vaccinations_bar_plot():
 
 
 def main():
-    total_vaccinations_bar_plot()
-    # time_plot('Alabama', 'distributed_per_hundred')
-    # create_new_data()
+    # total_vaccinations_bar_plot()
+    time_plot('Alabama', 'distributed_per_hundred')
+    create_new_data()
 
     
     # orig_data = pd.read_csv('clean_us_state_vacc.csv')

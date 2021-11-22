@@ -23,14 +23,14 @@ parser.add_argument('-s', '--shape', choices=['cylinder', 'light', 'circle', 'sp
                                               'diamond', 'flash', 'teardrop', 'cone', 'cross', 'pyramid',
                                               'round', 'crescent', 'flare', 'hexagon', 'dome', 'changed',
                                               'all'], dest='ufo_shape', type=str, help="Filters UFO type")
-parser.add_argument('-v','--vaccine', choices = fields, default = 'total_vaccinations', dest = 'covid_variable', type = str, help = 'COVID Vaccination choices' )
+parser.add_argument('-v','--vaccine', choices = fields, default = ['total_vaccinations', 'total_distributed'], dest = 'covid_variable', nargs = 2, type = str, help = 'COVID Vaccination choices' )
 parser.add_argument('-st','--state', choices = state_names, default = 'Alabama', dest = 'state_name', type = str, help = 'Choose a US State' )
 parser.add_argument('-p','--palette', choices=['BuGn', 'BuPu', 'GnBu', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 
                                                'RdPu', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd'],
                     nargs=2, default=['PuRd','BuGn'], dest="colors", help="Picks the Color palette for the map")
 parser.add_argument('-l','--location',type=str,dest = "state")
 #args = parser.parse_args()
-args = parser.parse_args(['--city', '--shape', 'all', '--palette','BuGn', 'BuPu','--location','TX', '--vaccine','total_vaccinations', '--state', 'California'])
+args = parser.parse_args(['--city', '--shape', 'all', '--palette','BuGn', 'BuPu','--location','TX', '--state', 'California'])
 
 
 ## Insert & Clean UFO Data
@@ -53,14 +53,20 @@ covid_df = covid_df.dropna()
 
 
 class map_maker:
-    def __init__(self):
+    def __init__(self, second = False):
         ''' Module initializes class
         '''
         #Creates Map and adds data to it
         self.get_lat_lon()
         self.build_basemap()
-        self.add_ufo_data()
         self.add_vaccine_data()
+        self.add_ufo_data()
+        
+        if second == True:
+            self.build_basemap()
+            self.add_vaccine_data(variable_arg = args.covid_variable[1])
+            self.add_ufo_data()
+    
     
     def get_lat_lon(self,state_input = str(args.state), state_filename = "state_lat_long.csv"):
         ''' Method gets the latitude and longitude for the lat and lon variables from command line input
@@ -110,7 +116,7 @@ class map_maker:
             #creates heatmap from ufo data
             self.ufo_data.dropna(inplace=True)
             self.ufo_heat = [[row['latitude'],row['longitude']] for index, row in self.ufo_data.iterrows()]
-            HeatMap(self.ufo_heat, name="UFOs",min_opacity=0, radius=20,blur=0).add_to(self.usa_map)
+            HeatMap(self.ufo_heat, name="UFOs",min_opacity=0.2, radius=20,blur=0).add_to(self.usa_map)
         else:
             #changes ufo_data state abbreiviations to capital to match data from us-states.json
             self.ufo_data["state/province"] = self.ufo_data["state/province"].str.upper()
@@ -131,29 +137,29 @@ class map_maker:
             ).add_to(self.usa_map)
         return self.usa_map
     
-    def add_vaccine_data(self, state_arg = args.state_name, variable_arg = args.covid_variable):
+    def add_vaccine_data(self, state_arg = args.state_name, variable_arg = args.covid_variable[0], color_arg = args.colors[1]):
         if (variable_arg == 'total_vaccinations'):
-            covid.total_vaccinations(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.total_vaccinations(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_vaccinated'):
-            covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_fully_vaccinated'):
-            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'total_vaccinations_per_hundred'):
-            covid.total_vaccinations_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.total_vaccinations_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_fully_vaccinated'):
-            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.people_fully_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_vaccinated_per_hundred'):
-            covid.people_vaccinated_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.people_vaccinated_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'distributed_per_hundred'):
-            covid.distributed_per_hundred(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.distributed_per_hundred(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'daily_vaccinations_raw'):
-            covid.daily_vaccinations_raw(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.daily_vaccinations_raw(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'daily_vaccinations'):
-            covid.daily_vaccinations(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.daily_vaccinations(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'daily_vaccinations_per_million'):
-            covid.daily_vaccinations_per_million(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.daily_vaccinations_per_million(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'share_doses_used'):
-            covid.share_doses_used(self.state_geo, covid_df, self.usa_map, args.color[1])
+            covid.share_doses_used(self.state_geo, covid_df, self.usa_map, color_arg)
                 
         return self.usa_map
     
@@ -181,7 +187,9 @@ def main():
     
     #Show combined map
     Map_made = map_maker()
-    Map_made.usa_map.save(outfile= "test.html")
+    Map_made.usa_map.save(outfile= "first_map.html")
+    Second_map_made = map_maker(second = True)
+    Second_map_made.usa_map.save(outfile = "second_map.html")
     
 if __name__ == '__main__':
     main()
