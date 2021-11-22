@@ -33,19 +33,7 @@ parser.add_argument('-l','--location',type=str,dest = "state")
 args = parser.parse_args(['--city', '--shape', 'all', '--palette','BuGn', 'BuPu','--location','TX', '--state', 'California'])
 
 
-## Insert & Clean UFO Data
-#Filtering UFO data based off command line arguements and ufo_data module functions
-if args.ufo_state == True:
-    ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", False)
-    ufo_df = ufo.ufo_counts(ufo_df,True)
-else:
-    ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", True)
-    ufo_df = ufo.ufo_counts(ufo_df,False)
 
-if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
-    ufo_df = ufo.ufo_type(ufo_df,args.ufo_shape.lower())
-#Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
-ufo_df = ufo.shape_counts(ufo_df)   
 
 ## Covid Data
 covid_df = pd.read_csv(covid.create_new_data())
@@ -53,10 +41,11 @@ covid_df = covid_df.dropna()
 
 
 class map_maker:
-    def __init__(self, map_type = args.covid_variable[0]):
+    def __init__(self, ufo_data, map_type = args.covid_variable[0]):
         ''' Module initializes class
         '''
         self.map_type = map_type
+        self.ufo_data = ufo_data
         #Creates Map and adds data to it
         self.get_lat_lon()
         self.build_basemap()
@@ -96,7 +85,7 @@ class map_maker:
         self.state_geo = f"{self.url}/us-states.json"
         return self.usa_map
     
-    def add_ufo_data(self,city_arg = args.ufo_state,color_arg = args.colors[0], ufo_data=ufo_df):
+    def add_ufo_data(self,city_arg = args.ufo_state,color_arg = args.colors[0]):
         ''' Method adds UFO layer to map object. UFO layer is either a heatmap or a choropleth plot.
             inputs:
             city_arg: Boolean, whether or not ufo data is by city  or state
@@ -106,19 +95,19 @@ class map_maker:
         #initializes variables related to ufo_data and command line inputs
         self.city_arg = city_arg
         self.color_arg = color_arg
-        self.ufo_data = ufo_data
         
+        self.ufo_layer = fl.FeatureGroup(name="UFO Data")
         #Changes type of map layer created depending on city_arg variable
         if self.city_arg == True:
             #creates heatmap from ufo data
             self.ufo_data.dropna(inplace=True)
-            self.ufo_heat = [[row['latitude'],row['longitude']] for index, row in self.ufo_data.iterrows()]
-            HeatMap(self.ufo_heat, name="UFOs",min_opacity=0.2, radius=20,blur=0).add_to(self.usa_map)
+            print(self.ufo_data.longitude.unique())
+            self.ufo_layer.add_child(HeatMap(list(zip(self.ufo_data.latitude.tolist(),self.ufo_data.longitude.to_list())), name="UFOs",min_opacity=0.2, radius=20,blur=0)).add_to(self.usa_map)
         else:
             #changes ufo_data state abbreiviations to capital to match data from us-states.json
             self.ufo_data["state/province"] = self.ufo_data["state/province"].str.upper()
             #creates Choropleth
-            fl.Choropleth(
+            self.ufo_layer.add_child(fl.Choropleth(
                 #adds state lines and names map layer
                 geo_data = self.state_geo,                     
                 name = "UFOs",
@@ -131,7 +120,9 @@ class map_maker:
                 line_opacity = .1,
                   key_on = "feature.id",
                 legend_name = "UFO Sighting Rate (%)",
-            ).add_to(self.usa_map)
+            )).add_to(self.usa_map)
+        self.usa_map.add_child(self.ufo_layer)
+        self.usa_map.add_child(fl.LayerControl())
         return self.usa_map
     
     def add_vaccine_data(self, state_arg = args.state_name, color_arg = args.colors[1]):
@@ -163,7 +154,19 @@ class map_maker:
         return self.usa_map
     
 def main():
-
+    ## Insert & Clean UFO Data
+    #Filtering UFO data based off command line arguements and ufo_data module functions
+    if args.ufo_state == True:
+        ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", False)
+        ufo_df = ufo.ufo_counts(ufo_df,True)
+    else:
+        ufo_df = ufo.ufo_data_clean("ufo_sighting_data.csv","state_lat_long.csv", True)
+        ufo_df = ufo.ufo_counts(ufo_df,False)
+    
+    if ("-s" in str(sys.argv)) and (args.ufo_shape.lower() != 'all'):
+        ufo_df = ufo.ufo_type(ufo_df,args.ufo_shape.lower())
+    #Adds count of ufo shapes seen, will return same value for every row if a shape is selected in command line
+    ufo_df = ufo.shape_counts(ufo_df)   
     
     ## UFO Plots
     #K-Value 3 Cluster Plot for UFO data, ignores shape input to see relationship between UFO Shape Sightings
@@ -185,9 +188,9 @@ def main():
 
     
     #Show combined map
-    Map_made = map_maker(args.covid_variable[0])
+    Map_made = map_maker(ufo_df, args.covid_variable[0])
     Map_made.usa_map.save(outfile= "first_map.html")
-    Second_map_made = map_maker(args.covid_variable[1])
+    Second_map_made = map_maker(ufo_df, args.covid_variable[1])
     Second_map_made.usa_map.save(outfile = "second_map.html")
     
 if __name__ == '__main__':
