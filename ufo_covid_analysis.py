@@ -108,6 +108,7 @@ class map_maker:
         #Changes type of map layer created depending on city_arg variable
         if self.city_arg == True:
             #creates heatmap from ufo data
+            self.ufo_data.dropna(inplace=True)
             self.ufo_heat = [[row['latitude'],row['longitude']] for index, row in self.ufo_data.iterrows()]
             HeatMap(self.ufo_heat, name="UFOs",min_opacity=0, radius=20,blur=0).add_to(self.usa_map)
         else:
