@@ -140,6 +140,8 @@ class map_maker:
     def add_vaccine_data(self, state_arg = args.state_name, variable_arg = args.covid_variable[0], color_arg = args.colors[1]):
         if (variable_arg == 'total_vaccinations'):
             covid.total_vaccinations(self.state_geo, covid_df, self.usa_map, color_arg)
+        elif(variable_arg == 'total_distributed'):
+            covid.total_distributed(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_vaccinated'):
             covid.people_vaccinated(self.state_geo, covid_df, self.usa_map, color_arg)
         elif(variable_arg == 'people_fully_vaccinated'):
