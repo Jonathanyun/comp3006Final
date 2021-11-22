@@ -119,7 +119,7 @@ class map_maker:
                 data = self.ufo_data,                        
                 columns = ["state/province", "ufo_count"],
                 #changes plot color based of command input
-                fill_color = str(self.city_arg),                      
+                fill_color = str(self.color_arg),                      
                 fill_opacity = 0.7,
                 line_opacity = .1,
                   key_on = "feature.id",
