@@ -1,5 +1,5 @@
 import unittest
-#import covid_vaccinations as
+import covid_vaccinations as covid
 import lat_lon as ll
 #import ufo_covid_analysis as 
 import ufo_data as ufo
@@ -85,7 +85,20 @@ class TestProject(unittest.TestCase):
         test_ufo_df["shape_count"] = test_ufo_df.UFO_shape.map(ufo_shape_dict)
         self.assertTrue(ufo.shape_counts(test_ufo_df).shape_count.equals(test_ufo_df.shape_count))
         
-    #def test_covid_vaccinations(self):
+    def test_covid_vaccinations(self):
+        """
+            Unit Tests for covid_vaccinations.py
+        """
+        test_covid_file = 'clean_us_state_vacc.csv'
+        test_covid_df = pd.read(test_covid_file)
+        
+        other_test_covid_file = 'updated_us_state_vacc.csv'
+        other_test_covid_df = pd.read(other_test_covid_file)
+        
+        self.assertTrue(covid.merge_data().equals(other_test_covid_df))
+        self.assertTrue(covid.create_new_data().equals(test_covid_file))
+        
+        
     
     #def test_ufo_covid_analysis(self):
         

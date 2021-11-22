@@ -6,35 +6,46 @@ from folium import plugins
 from folium.plugins import HeatMap
 import matplotlib.pyplot as plt
 
+
 def total_vaccinations(state, data, map, color):
-	fl.Choropleth(
-		geo_data = state,
-		name = 'choropleth',
-		data = data, 
-		columns = ['location', 'total_vaccinations'],
-		key_on = "feature.properties.name", 
-		fill_color = color,
-		fill_opacity = 0.7,
-		line_opacity = 0.2,
-		legend_name = 'Total Vaccinations'
+    """
+        Chloropleth map for the total vaccinations
+    """
+    fl.Choropleth(
+		geo_data=state,
+		name='choropleth',
+		data=data,
+		columns=['location', 'total_vaccinations'],
+		key_on="feature.properties.name",
+		fill_color=color,
+		fill_opacity=0.7,
+		line_opacity=0.2,
+		legend_name='Total Vaccinations'
 	).add_to(map)
-    
+
+
 def total_distributed(state, data, map, color):
-	fl.Choropleth(
-		geo_data = state,
-		name = 'choropleth',
-		data = data, 
-		columns = ['location', 'total_distributed'],
-		key_on = "feature.properties.name", 
-		fill_color = color,
-		fill_opacity = 0.7,
-		line_opacity = 0.2,
-		legend_name = 'Total Vaccinations Distributed'
+    """
+        Chloropleth map for the total distributed vaccinations
+    """
+    fl.Choropleth(
+		geo_data=state,
+		name='choropleth',
+		data=data,
+		columns=['location', 'total_distributed'],
+		key_on="feature.properties.name",
+		fill_color=color,
+		fill_opacity=0.7,
+		line_opacity=0.2,
+		legend_name='Total Vaccinations Distributed'
 	).add_to(map)
 
 
 def people_vaccinated(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the people vaccinated
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -48,7 +59,10 @@ def people_vaccinated(state, data, map, color):
 
  
 def people_fully_vaccinated(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the people fully vaccinated
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -62,7 +76,10 @@ def people_fully_vaccinated(state, data, map, color):
 
  
 def total_vaccinations_per_hundred(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the total vaccinations per hundred
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -73,10 +90,13 @@ def total_vaccinations_per_hundred(state, data, map, color):
 		line_opacity = 0.2,
 		legend_name = 'Total Vaccinations per Hundred'
 	).add_to(map)
+    
 
- 
 def people_fully_vaccinated(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the people fully vaccinated
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -91,7 +111,10 @@ def people_fully_vaccinated(state, data, map, color):
 
  
 def people_vaccinated_per_hundred(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the people vaccinated per hundred
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -105,7 +128,10 @@ def people_vaccinated_per_hundred(state, data, map, color):
 
  
 def distributed_per_hundred(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropleth map for the distribiuted per hundred
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -119,7 +145,10 @@ def distributed_per_hundred(state, data, map, color):
 
  
 def daily_vaccinations_raw(state, data, map, color):
-	fl.Choropleth(
+    """
+        Chloropeth map for the daily vaccinations raw
+    """
+    fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
 		data = data, 
@@ -133,6 +162,9 @@ def daily_vaccinations_raw(state, data, map, color):
 
  
 def daily_vaccinations(state, data, map, color):
+    """
+        Chloropleth map for the daily vaccinations
+    """
     fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
@@ -147,6 +179,9 @@ def daily_vaccinations(state, data, map, color):
 
     
 def daily_vaccinations_per_million(state, data, map, color):
+    """
+        Chloropleth map for the daily vaccinations per million
+    """
     fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
@@ -161,6 +196,9 @@ def daily_vaccinations_per_million(state, data, map, color):
 
     
 def share_doses_used(state, data, map, color):
+    """
+        Chloropleth map for the share doses used
+    """
     fl.Choropleth(
 		geo_data = state,
 		name = 'choropleth',
@@ -175,6 +213,9 @@ def share_doses_used(state, data, map, color):
     
  
 def merge_data(file_name, df1, df2, variables):
+    """
+        Function that merges the dataframes together and writes them to a new .csv file and returns the new data
+    """
     new_data = pd.merge(df1, df2, on = 'location')
     
     with open(file_name, 'w') as csvfile:
@@ -186,6 +227,9 @@ def merge_data(file_name, df1, df2, variables):
     return new_data
 
 def clean_data(file_name, df1, state_name, variables):
+    """
+        Function that cleans the data to only show the latest date for all 50 states
+    """
     with open(file_name, 'w') as csvfile:
         csv_writer = csv.writer(csvfile, delimiter = ',')
         csv_writer.writerow(variables)
@@ -201,6 +245,9 @@ def clean_data(file_name, df1, state_name, variables):
 
     
 def create_new_data():
+    """
+        Function that calls merge_data and clean_data and returns the file name
+    """
     orig_vacc_data = pd.read_csv('us_state_vaccinations.csv')
     vacc_data = pd.DataFrame(orig_vacc_data)
     
@@ -219,6 +266,9 @@ def create_new_data():
 
 
 def time_plot(state, variable):
+    """
+        Creates time plots for the state and variable designated
+    """
     df = pd.read_csv('updated_us_state_vacc.csv')
     dates = df.loc[df['location'] == state]['date'].reset_index(drop = True)
     variable_data = df.loc[df['location'] == state][variable].reset_index(drop = True)
@@ -238,6 +288,9 @@ def time_plot(state, variable):
     print(fig)
 
 def total_vaccinations_bar_plot():
+    """
+        Creates the total vaccinations bad plot for all the states
+    """
     df = pd.read_csv('clean_us_state_vacc.csv')
     state_names = df['abbr']
     total_vacc = df['total_vaccinations']
@@ -256,23 +309,23 @@ def total_vaccinations_bar_plot():
 
 
 def main():
-    # total_vaccinations_bar_plot()
+    total_vaccinations_bar_plot()
     time_plot('Alabama', 'distributed_per_hundred')
     create_new_data()
 
     
-    # orig_data = pd.read_csv('clean_us_state_vacc.csv')
-    # clean_data = pd.DataFrame(orig_data)
+    orig_data = pd.read_csv('clean_us_state_vacc.csv')
+    clean_data = pd.DataFrame(orig_data)
     
-    # lat = 37.0902
-    # long = -95.7129
+    lat = 37.0902
+    long = -95.7129
     
-    # total_map = fl.Map(location = [lat, long], zoom_start = 3)
-    # url = ("https://raw.githubusercontent.com/python-visualization/folium/master/examples/data")
-    # state_geo = f"{url}/us-states.json"
-    # color = "YlGn"
+    total_map = fl.Map(location = [lat, long], zoom_start = 3)
+    url = ("https://raw.githubusercontent.com/python-visualization/folium/master/examples/data")
+    state_geo = f"{url}/us-states.json"
+    color = "YlGn"
 
-    # share_doses_used(state_geo, clean_data, total_map, color)
+    share_doses_used(state_geo, clean_data, total_map, color)
     
 
 if __name__ == "__main__":
